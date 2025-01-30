@@ -11,12 +11,12 @@ const TodoList = () => {
         setNovaTarefa(""); // Limpa o input
     };
 
-    // Remover uma tarefa da lista
+    // Remover uma tarefa
     const removerTarefa = (index) => {
         setTarefas(tarefas.filter((_, i) => i !== index));
     };
 
-    // Alternar o status de conclusão da tarefa
+    // Alternar status de conclusão
     const alternarConclusao = (index) => {
         setTarefas(
             tarefas.map((tarefa, i) =>
@@ -25,11 +25,24 @@ const TodoList = () => {
         );
     };
 
+    // Contagem de tarefas pendentes
+    const tarefasPendentes = tarefas.filter((tarefa) => !tarefa.concluida).length;
+
+    // Mensagem condicional
+    let mensagem;
+    if (tarefas.length === 0) {
+        mensagem = "Nenhuma tarefa adicionada. Comece criando uma!";
+    } else if (tarefasPendentes === 0) {
+        mensagem = "Parabéns! Você concluiu todas as tarefas! 🎉";
+    } else {
+        mensagem = `Você tem ${tarefasPendentes} tarefa(s) pendente(s).`;
+    }
+
     return (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
             <h2>Lista de Tarefas</h2>
 
-            {/* Input e botão para adicionar nova tarefa */}
+            {/* Input e botão para adicionar tarefa */}
             <input
                 type="text"
                 placeholder="Digite uma tarefa..."
@@ -39,31 +52,30 @@ const TodoList = () => {
             />
             <button onClick={adicionarTarefa}>Adicionar</button>
 
+            {/* Exibe mensagem condicional */}
+            <p style={{ fontWeight: "bold", marginTop: "10px" }}>{mensagem}</p>
+
             {/* Lista de tarefas */}
-            <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
-                {tarefas.length > 0 ? (
-                    tarefas.map((tarefa, index) => ( // Aqui está o uso do .map()
-                        <li key={index} style={{ marginBottom: "10px" }}>
-                            <span
-                                onClick={() => alternarConclusao(index)}
-                                style={{
-                                    textDecoration: tarefa.concluida ? "line-through" : "none",
-                                    cursor: "pointer",
-                                }}
-                            >
-                                {tarefa.texto}
-                            </span>
-                            <button
-                                onClick={() => removerTarefa(index)}
-                                style={{ marginLeft: "10px", color: "red" }}
-                            >
-                                ❌
-                            </button>
-                        </li>
-                    ))
-                ) : (
-                    <p>Nenhuma tarefa adicionada.</p>
-                )}
+            <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
+                {tarefas.map((tarefa, index) => (
+                    <li key={index} style={{ marginBottom: "10px" }}>
+                        <span
+                            onClick={() => alternarConclusao(index)}
+                            style={{
+                                textDecoration: tarefa.concluida ? "line-through" : "none",
+                                cursor: "pointer",
+                            }}
+                        >
+                            {tarefa.texto}
+                        </span>
+                        <button
+                            onClick={() => removerTarefa(index)}
+                            style={{ marginLeft: "10px", color: "red" }}
+                        >
+                            ❌
+                        </button>
+                    </li>
+                ))}
             </ul>
         </div>
     );
